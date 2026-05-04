@@ -1,11 +1,58 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>PakePlus</title>
-    </head>
-    <body>
-        PakePlus
-    </body>
-</html>
+<script>
+let audio = null;
+let delayTimer = null;
+
+// 更新显示数字
+function update(num){
+  const el = document.getElementById("number");
+  el.textContent = num;
+  el.style.transform="scale(1.15)";
+  setTimeout(()=>el.style.transform="scale(1)",150);
+}
+
+// 播放两遍
+function playAudio(fileName){
+  stopAudio();
+
+  audio = new Audio();
+  audio.src = fileName;
+  audio.play().then(()=>{
+    delayTimer = setTimeout(()=>{
+      audio.currentTime = 0;
+      audio.play();
+    }, 3000);
+  }).catch(()=>{
+    alert("音频播放失败（可能是权限或路径问题）");
+  });
+}
+
+// 停止
+function stopAudio(){
+  if(audio){
+    audio.pause();
+    audio.currentTime = 0;
+    audio = null;
+  }
+  if(delayTimer){
+    clearTimeout(delayTimer);
+    delayTimer = null;
+  }
+}
+
+// 数字
+function callNum(num){
+  update(num);
+  playAudio(num + ".mp3");
+}
+
+// 外卖
+function callDelivery(){
+  update("外卖");
+  playAudio("外卖.mp3");
+}
+
+// 暂停
+function pauseAudio(){
+  stopAudio();
+}
+</script>
